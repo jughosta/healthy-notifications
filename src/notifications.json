@@ -1,0 +1,19 @@
+{
+	"notifications": [
+		{
+			"id": 0,
+			"message": "Take a break",
+			"interval": "45"
+		},
+		{
+			"id": 1,
+			"message": "Drink water",
+			"interval": "60"
+		},
+		{
+			"id": 2,
+			"message": "Keep a good posture",
+			"interval": "30"
+		}
+	]
+}

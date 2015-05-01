@@ -1,0 +1,16 @@
+{
+  "name": "healthy-notifications",
+  "version": "0.1.0",
+  "main": "src/server.js",
+  "devDependencies": {
+    "csstime-gulp-tasks": "^4.0.1",
+    "electron-prebuilt": "^0.25.1",
+    "gulp": "^3.8.11"
+  },
+  "scripts": {
+    "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./"
+  },
+  "dependencies": {
+    "snapsvg": "^0.4.0"
+  }
+}

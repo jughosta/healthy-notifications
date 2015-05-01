@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Healthy Notifications</title>
+	<!--<script src="browser.js"></script>-->
+	<link rel="stylesheet" href="styles.css"/>
+	<script src="snap.svg-min.js"></script>
+</head>
+<body class="document">
+	<section class="settings" id="js-settings">
+		<section class="js-reminder reminder reminder--water">
+			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
+				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+			</svg>
+		</section><!--
+		--><section class="js-reminder reminder reminder--posture">
+			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
+				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+			</svg>
+		</section><!--
+		--><section class="js-reminder reminder reminder--rest">
+			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
+				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+			</svg>
+		</section>
+	</section>
+
+	<script>
+		(function() {
+
+			function init() {
+				var speed = 330,
+					easing = mina.backout;
+
+				[].slice.call(document.querySelectorAll('.js-reminder')).forEach(function (el) {
+					var s = Snap(el.querySelector('svg')), path = s.select('path'),
+						pathConfig = {
+							from: path.attr('d'),
+							to: 'm 0,0 0,47.7775 c 24.580441,3.12569 55.897012,-8.199417 90,-8.199417 34.10299,0 65.41956,11.325107 90,8.199417 L 180,0 z'
+						};
+
+					el.addEventListener('mouseenter', function () {
+						path.animate({'path': pathConfig.to}, speed, easing);
+					});
+
+					el.addEventListener('mouseleave', function () {
+						path.animate({'path': pathConfig.from}, speed, easing);
+					});
+				});
+			}
+
+			init();
+
+		})();
+	</script>
+</body>
+</html>
