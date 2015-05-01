@@ -9,6 +9,9 @@ var gulp = require('gulp'),
 csstime.loadGulpTasks(gulp, config);
 
 gulp.task('publish-snapsvg', function () {
-	return gulp.src('node_modules/snapsvg/dist/snap.svg-min.js')
+	return gulp.src([
+		'node_modules/snapsvg/dist/snap.svg-min.js',
+		'node_modules/snapsvg/dist/snap.svg.js'
+	])
 		.pipe(gulp.dest('build'));
 });

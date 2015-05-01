@@ -3,25 +3,67 @@
 <head>
 	<title>Healthy Notifications</title>
 	<!--<script src="browser.js"></script>-->
-	<link rel="stylesheet" href="styles.css"/>
-	<script src="snap.svg-min.js"></script>
+	<link rel="stylesheet" href="styles.css">
+	<script src="snap.svg.js"></script>
 </head>
 <body class="document">
 	<section class="settings" id="js-settings">
-		<section class="js-reminder reminder reminder--water">
-			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
-				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+		<section class="js-reminder reminder">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+				 width="250px" height="430px" viewBox="0 0 250 430" enable-background="new 0 0 250 430" xml:space="preserve">
+				<path class="reminder__caption" d="M0,0v332c34.1,30,77.6,48,125,48s90.9-18,125-48V0H0L0,0"/>
 			</svg>
+			<div class="reminder__options">
+				<div class="reminder__title">Rest</div>
+				<div class="reminder__message">Take a break</div>
+				<div class="reminder__message reminder__interval">45 m</div>
+			</div>
+			<div class="reminder__options reminder__settings">
+				<div>
+					<button class="reminder__button">Edit</button>
+				</div>
+				<div>
+					<button class="reminder__button">Disable</button>
+				</div>
+			</div>
 		</section><!--
-		--><section class="js-reminder reminder reminder--posture">
-			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
-				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+		--><section class="js-reminder reminder">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+				 width="250px" height="430px" viewBox="0 0 250 430" enable-background="new 0 0 250 430" xml:space="preserve">
+				<path class="reminder__caption" d="M0,0v332c34.1,30,77.6,48,125,48s90.9-18,125-48V0H0L0,0"/>
 			</svg>
+			<div class="reminder__options">
+				<div class="reminder__title">Water</div>
+				<div class="reminder__message">Drink more water</div>
+				<div class="reminder__message reminder__interval">60 m</div>
+			</div>
+			<div class="reminder__options reminder__settings">
+				<div>
+					<button class="reminder__button">Edit</button>
+				</div>
+				<div>
+					<button class="reminder__button">Disable</button>
+				</div>
+			</div>
 		</section><!--
-		--><section class="js-reminder reminder reminder--rest">
-			<svg viewBox="0 0 180 320" preserveAspectRatio="none">
-				<path class="reminder__caption" d="M0,0C0,0,0,171.14385,0,171.14385C24.580441,186.61523,55.897012,195.90157,90,195.90157C124.10299,195.90157,155.41956,186.61523,180,171.14385C180,171.14385,180,0,180,0C180,0,0,0,0,0C0,0,0,0,0,0"></path>
+		--><section class="js-reminder reminder">
+			<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+				 width="250px" height="430px" viewBox="0 0 250 430" enable-background="new 0 0 250 430" xml:space="preserve">
+				<path class="reminder__caption" d="M0,0v332c34.1,30,77.6,48,125,48s90.9-18,125-48V0H0L0,0"/>
 			</svg>
+			<div class="reminder__options">
+				<div class="reminder__title">Posture</div>
+				<div class="reminder__message">Keep a good posture</div>
+				<div class="reminder__message reminder__interval">60 m</div>
+			</div>
+			<div class="reminder__options reminder__settings">
+				<div>
+					<button class="reminder__button">Edit</button>
+				</div>
+				<div>
+					<button class="reminder__button">Disable</button>
+				</div>
+			</div>
 		</section>
 	</section>
 
@@ -36,7 +78,7 @@
 					var s = Snap(el.querySelector('svg')), path = s.select('path'),
 						pathConfig = {
 							from: path.attr('d'),
-							to: 'm 0,0 0,47.7775 c 24.580441,3.12569 55.897012,-8.199417 90,-8.199417 34.10299,0 65.41956,11.325107 90,8.199417 L 180,0 z'
+							to: 'M0,0v187.9c34.1,12.2,77.6-18.9,125-18.9s90.9,31.1,125,18.9V0H0z'
 						};
 
 					el.addEventListener('mouseenter', function () {

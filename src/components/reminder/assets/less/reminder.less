@@ -1,10 +1,12 @@
 .reminder {
+	position: relative;
 	display: inline-block;
 	vertical-align: top;
 	width: @theme-item-width;
 	height: @theme-item-height;
 	margin: @theme-item-margin;
-	background-color: #2FBF71;
+	font: 16px 'Trebuchet MS';
+	background-color: #2fbf71;
 
 	&.is-disabled {
 		background-color: #ccc;
@@ -13,4 +15,54 @@
 
 .reminder__caption {
 	fill: #fff;
+}
+
+.reminder__button {
+	width: 50%;
+	margin: 5px 0;
+	padding: 4px 0;
+	color: #fff;
+	font-size: 16px;
+	text-transform: uppercase;
+	border: 1px solid #fff;
+	outline: 0;
+	background: transparent;
+	cursor: pointer;
+
+	&:hover {
+		padding: 3px 0;
+		border-width: 2px;
+	}
+}
+
+.reminder__settings {
+	display: none;
+	padding-top: 220px;
+
+	.reminder:hover & {
+		display: block;
+	}
+}
+
+.reminder__options {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	text-align: center;
+}
+
+.reminder__title {
+	margin: 40px 0 20px 0;
+	color: #2fbf71;
+	font-size: 20px;
+	text-transform: uppercase;
+}
+
+.reminder__message {
+	color: #474350;
+}
+
+.reminder__interval {
+	margin-top: 5px;
 }

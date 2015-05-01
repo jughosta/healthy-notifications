@@ -18,10 +18,10 @@ app.on('window-all-closed', function() {
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
 	// Create the browser window.
-	mainWindow = new BrowserWindow({width: 800, height: 600});
+	mainWindow = new BrowserWindow({width: 900, height: 560});
 
 	// and load the index.html of the app.
-	mainWindow.loadUrl('file://' + __dirname + '/index.html');
+	mainWindow.loadUrl('file://' + __dirname + '/../build/index.html');
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function() {
