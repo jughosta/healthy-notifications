@@ -2,17 +2,40 @@
 	<svg width="250px" height="430px" viewBox="0 0 250 430">
         <path class="js-reminder-path reminder__caption"
 			  d="M0,0v332c34.1,30,77.6,48,125,48s90.9-18,125-48V0H0L0,0"/>
-        <path class="js-reminder-path-hidden reminder__caption is-hidden"
+        <path class="js-reminder-path-hovered reminder__caption is-hidden"
 			  d="M0,0v187.9c34.1,12.2,77.6-18.9,125-18.9s90.9,31.1,125,18.9V0H0z"/>
+		<path class="js-reminder-path-editing reminder__caption is-hidden"
+			  d="M0,0v102.3c46,0.2,77.6,0.1,125,0.1s80,0.1,125-0.1V0H0z"/>
     </svg>
+	<form action="" class="js-reminder-form reminder__form"
+		  data-reminder-alias="{{alias}}">
+		<div class="reminder__form-item">
+			<label class="reminder__label" for="js-reminder-{{reminder.id}}-interval">Interval in minutes:</label>
+			<input id="js-reminder-{{reminder.id}}-interval"
+				   name="interval" type="number" class="reminder__input"
+				   step="0.5" min="1" value="{{reminder.interval}}"/>
+		</div>
+		<div class="reminder__form-item">
+			<label class="reminder__label" for="js-reminder-{{reminder.id}}-message">Message:</label>
+			<textarea name="message" id="js-reminder-{{reminder.id}}-message"
+					  class="reminder__textarea">{{reminder.message}}</textarea>
+		</div>
+		<div class="reminder__form-item">
+			<input type="submit" class="reminder__button" value="Save"/>
+		</div>
+	</form>
 	<div class="reminder__options">
 		<div class="reminder__title">{{reminder.title}}</div>
-		<div class="reminder__interval">{{reminder.interval}}m</div>
-		<div class="reminder__message">{{reminder.message}}</div>
+		<div class="reminder__interval">
+			<span class="js-reminder-interval">{{reminder.interval}}</span>m
+		</div>
+		<div class="js-reminder-message reminder__message">{{reminder.message}}</div>
 	</div>
 	<div class="reminder__options reminder__settings">
 		<div>
-			<button class="js-reminder-button-edit reminder__button">Edit</button>
+			<button class="js-reminder-button-edit reminder__button">
+				Edit
+			</button>
 		</div>
 		<div>
 			<button class="js-reminder-button-toggle reminder__button"

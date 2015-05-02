@@ -15,6 +15,51 @@
 	}
 }
 
+.reminder__form {
+	position: absolute;
+	top: 120px;
+	left: 0;
+	display: none;
+	width: 100%;
+
+	.reminder.is-editing & {
+		display: block;
+	}
+}
+
+.reminder__form-item {
+	padding: 10px 20px;
+	text-align: center;
+}
+
+.reminder__label {
+	display: block;
+	margin-bottom: 4px;
+	color: #fff;
+	text-align: left;
+}
+
+.reminder__textarea,
+.reminder__input {
+	box-sizing: border-box;
+	width: 100%;
+	padding: 4px;
+	color: #474350;
+	font-size: 16px;
+	text-align: left;
+	border: 1px solid #fff;
+}
+
+.reminder__input:focus,
+.reminder__textarea:focus {
+	outline: none;
+}
+
+.reminder__textarea {
+	height: 100px;
+	resize: none;
+}
+
 .reminder__caption {
 	fill: #fff;
 
@@ -45,8 +90,12 @@
 	display: none;
 	padding-top: 220px;
 
-	.reminder:hover & {
+	.reminder:not(.is-edited):hover & {
 		display: block;
+	}
+
+	.reminder.is-editing:hover & {
+		display: none;
 	}
 }
 
@@ -73,12 +122,20 @@
 	border-bottom-left-radius: 40%;
 	transition: height .2s ease, color .2s ease;
 
-	.reminder:hover & {
+	.reminder.is-editing &,
+	.reminder:not(.is-edited):hover & {
 		height: 0;
 		color: #fff;
 	}
 }
 
 .reminder__interval {
-	margin-bottom: 5px;
+	overflow: hidden;
+	height: 24px;
+	transition: height .2s ease, color .2s ease;
+
+	.reminder.is-editing & {
+		height: 0;
+		color: #fff;
+	}
 }

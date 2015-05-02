@@ -47,6 +47,8 @@ HealthyNotifications.prototype.load = function () {
 
 	this.initAnimation();
 	this.initToggleReminders();
+	this.initEditingReminders();
+	this.initSavingReminders();
 	this.startTimers();
 	this.greeting();
 };
@@ -62,17 +64,34 @@ HealthyNotifications.prototype.initAnimation = function () {
 		.forEach(function (reminderElement) {
 			var s = new Snap(reminderElement.querySelector('svg')),
 				path = s.select('.js-reminder-path'),
-				pathHidden = s.select('.js-reminder-path-hidden'),
+				pathHovered = s.select('.js-reminder-path-hovered'),
 				pathConfig = {
 					from: path.attr('d'),
-					to: pathHidden.attr('d')
+					to: pathHovered.attr('d')
 				};
 
+			path.attr('data-d', path.attr('d'));
+
 			reminderElement.addEventListener('mouseenter', function () {
+				if (reminderElement.classList.contains('is-editing')) {
+					return;
+				}
+				if (reminderElement.classList.contains('is-edited')) {
+					return;
+				}
 				path.animate({path: pathConfig.to}, speed, easing);
 			});
 
 			reminderElement.addEventListener('mouseleave', function () {
+				if (reminderElement.classList.contains('is-editing')) {
+					return;
+				}
+				if (reminderElement.classList.contains('is-edited')) {
+					setTimeout(function () {
+						reminderElement.classList.remove('is-edited');
+					}, 5000);
+					return;
+				}
 				path.animate({path: pathConfig.from}, speed, easing);
 			});
 		});
@@ -105,14 +124,94 @@ HealthyNotifications.prototype.initToggleReminders = function () {
 };
 
 /**
+ * Initialize editing reminders.
+ */
+HealthyNotifications.prototype.initEditingReminders = function () {
+	var self = this,
+		speed = 330,
+		easing = window.mina.backout;
+
+	[].slice.call(window.document.querySelectorAll('.js-reminder'))
+		.forEach(function (reminderElement) {
+			var buttonElement = reminderElement
+				.querySelector('.js-reminder-button-edit');
+
+			var s = new Snap(reminderElement.querySelector('svg')),
+				path = s.select('.js-reminder-path'),
+				pathEditing = s.select('.js-reminder-path-editing');
+
+			buttonElement.addEventListener('click', function () {
+				reminderElement.classList.add('is-editing');
+				path.animate({path: pathEditing.attr('d')}, speed, easing);
+			});
+		});
+};
+
+/**
+ * Initialize saving reminders.
+ */
+HealthyNotifications.prototype.initSavingReminders = function () {
+	var self = this,
+		speed = 330,
+		easing = window.mina.backout;
+
+	[].slice.call(window.document.querySelectorAll('.js-reminder'))
+		.forEach(function (reminderElement) {
+			var formElement = reminderElement
+				.querySelector('.js-reminder-form');
+
+			var reminderAlias = formElement.getAttribute('data-reminder-alias'),
+				reminder = localStore.getData()[reminderAlias];
+
+			var s = new Snap(reminderElement.querySelector('svg')),
+				path = s.select('.js-reminder-path');
+
+			formElement.addEventListener('submit', function (event) {
+				event.preventDefault();
+				event.stopPropagation();
+				reminder.interval = formElement.querySelector('[name=interval]')
+					.value;
+				reminder.message = formElement.querySelector('[name=message]')
+					.value;
+				self.saveReminder(reminder);
+				self.saveReminderView(reminder, reminderElement);
+				path.animate({path: path.attr('data-d')}, speed, easing);
+				reminderElement.classList.add('is-edited');
+				reminderElement.classList.remove('is-editing');
+			});
+		});
+};
+
+/**
  * Toggles reminder.
  * @param {Object} reminder
  */
 HealthyNotifications.prototype.toggleReminder = function (reminder) {
 	reminder.isEnabled = !reminder.isEnabled;
+	this.saveReminder(reminder);
+};
+
+/**
+ * Saves reminder options.
+ * @param {Object} reminder
+ */
+HealthyNotifications.prototype.saveReminder = function (reminder) {
 	localStore.save(localStore.getData());
 	this.startTimerForReminder(reminder);
 };
+
+/**
+ * Saves reminder view.
+ * @param {Object} reminder
+ * @param {Element} reminderElement
+ */
+HealthyNotifications.prototype.saveReminderView =
+	function (reminder, reminderElement) {
+		reminderElement.querySelector('.js-reminder-interval')
+			.innerText = reminder.interval;
+		reminderElement.querySelector('.js-reminder-message')
+			.innerText = reminder.message;
+	};
 
 /**
  * Greeting and checking permissions.
