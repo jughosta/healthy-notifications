@@ -10,6 +10,7 @@ var settingsTemplate = require('./templates/settings/template'),
 	localStore = new LocalStore(require('./reminders'));
 
 var GREETING_MESSAGE = 'Hi! Have a nice day!',
+	GREETING_DELAY = 1500,
 	INTERVAL_RATIO = 60 * 1000; // in minutes
 
 module.exports = HealthyNotifications;
@@ -45,142 +46,141 @@ HealthyNotifications.prototype.load = function () {
 		reminders: remindersList
 	});
 
-	this.initAnimation();
-	this.initToggleReminders();
-	this.initEditingReminders();
-	this.initSavingReminders();
+	this.addListeners();
 	this.startTimers();
 	this.greeting();
 };
 
 /**
- * Initializes onHover animation.
+ * Add listeners.
  */
-HealthyNotifications.prototype.initAnimation = function () {
-	var speed = 330,
-		easing = window.mina.backout;
+HealthyNotifications.prototype.addListeners = function () {
+	var self = this;
 
 	[].slice.call(window.document.querySelectorAll('.js-reminder'))
 		.forEach(function (reminderElement) {
 			var s = new Snap(reminderElement.querySelector('svg')),
 				path = s.select('.js-reminder-path'),
 				pathHovered = s.select('.js-reminder-path-hovered'),
+				pathEditing = s.select('.js-reminder-path-editing'),
 				pathConfig = {
-					from: path.attr('d'),
-					to: pathHovered.attr('d')
+					path: path,
+					initial: path.attr('d'),
+					active: pathHovered.attr('d'),
+					editing: pathEditing.attr('d'),
+					speed: 330,
+					easing: window.mina.backout
 				};
 
-			path.attr('data-d', path.attr('d'));
-
-			reminderElement.addEventListener('mouseenter', function () {
-				if (reminderElement.classList.contains('is-editing')) {
-					return;
-				}
-				if (reminderElement.classList.contains('is-edited')) {
-					return;
-				}
-				path.animate({path: pathConfig.to}, speed, easing);
-			});
-
-			reminderElement.addEventListener('mouseleave', function () {
-				if (reminderElement.classList.contains('is-editing')) {
-					return;
-				}
-				if (reminderElement.classList.contains('is-edited')) {
-					setTimeout(function () {
-						reminderElement.classList.remove('is-edited');
-					}, 5000);
-					return;
-				}
-				path.animate({path: pathConfig.from}, speed, easing);
-			});
+			self.initAnimation(reminderElement, pathConfig);
+			self.initToggleReminders(reminderElement);
+			self.initEditingReminders(reminderElement, pathConfig);
+			self.initSavingReminders(reminderElement, pathConfig);
 		});
 };
 
 /**
- * Initialize toggling reminders.
+ * Initializes onHover animation.
+ * @param {Element} reminderElement
+ * @param {Object} pathConfig
  */
-HealthyNotifications.prototype.initToggleReminders = function () {
-	var self = this;
-
-	[].slice.call(window.document.querySelectorAll('.js-reminder'))
-		.forEach(function (reminderElement) {
-			var buttonElement = reminderElement
-				.querySelector('.js-reminder-button-toggle');
-
-			var reminderAlias = buttonElement.getAttribute('data-reminder-alias'),
-				reminder = localStore.getData()[reminderAlias];
-
-			buttonElement.addEventListener('click', function () {
-				self.toggleReminder(reminder);
-				buttonElement.innerText =
-					reminder.isEnabled ? 'Disable' : 'Enable';
-
-				reminderElement.classList[
-					reminder.isEnabled ? 'remove' : 'add'
-					]('is-disabled');
-			});
+HealthyNotifications.prototype.initAnimation =
+	function (reminderElement, pathConfig) {
+		reminderElement.addEventListener('mouseenter', function () {
+			if (reminderElement.classList.contains('is-editing')) {
+				return;
+			}
+			if (reminderElement.classList.contains('is-edited')) {
+				return;
+			}
+			pathConfig.path.animate({path: pathConfig.active},
+				pathConfig.speed, pathConfig.easing);
 		});
+
+		reminderElement.addEventListener('mouseleave', function () {
+			if (reminderElement.classList.contains('is-editing')) {
+				return;
+			}
+			if (reminderElement.classList.contains('is-edited')) {
+				setTimeout(function () {
+					reminderElement.classList.remove('is-edited');
+				}, 5000);
+				return;
+			}
+			pathConfig.path.animate({path: pathConfig.initial},
+				pathConfig.speed, pathConfig.easing);
+		});
+	};
+
+/**
+ * Initialize toggling reminders.
+ * @param {Element} reminderElement
+ */
+HealthyNotifications.prototype.initToggleReminders = function (reminderElement) {
+	var self = this,
+		buttonElement = reminderElement
+			.querySelector('.js-reminder-button-toggle');
+
+	var reminderAlias = buttonElement.getAttribute('data-reminder-alias'),
+		reminder = localStore.getData()[reminderAlias];
+
+	buttonElement.addEventListener('click', function () {
+		self.toggleReminder(reminder);
+		buttonElement.innerText =
+			reminder.isEnabled ? 'Disable' : 'Enable';
+
+		reminderElement.classList[
+			reminder.isEnabled ? 'remove' : 'add'
+			]('is-disabled');
+	});
 };
 
 /**
  * Initialize editing reminders.
+ * @param {Element} reminderElement
+ * @param {Object} pathConfig
  */
-HealthyNotifications.prototype.initEditingReminders = function () {
-	var self = this,
-		speed = 330,
-		easing = window.mina.backout;
+HealthyNotifications.prototype.initEditingReminders =
+	function (reminderElement, pathConfig) {
+		var buttonElement = reminderElement
+			.querySelector('.js-reminder-button-edit');
 
-	[].slice.call(window.document.querySelectorAll('.js-reminder'))
-		.forEach(function (reminderElement) {
-			var buttonElement = reminderElement
-				.querySelector('.js-reminder-button-edit');
-
-			var s = new Snap(reminderElement.querySelector('svg')),
-				path = s.select('.js-reminder-path'),
-				pathEditing = s.select('.js-reminder-path-editing');
-
-			buttonElement.addEventListener('click', function () {
-				reminderElement.classList.add('is-editing');
-				path.animate({path: pathEditing.attr('d')}, speed, easing);
-			});
+		buttonElement.addEventListener('click', function () {
+			reminderElement.classList.add('is-editing');
+			pathConfig.path.animate({path: pathConfig.editing},
+				pathConfig.speed, pathConfig.easing);
 		});
-};
+	};
 
 /**
  * Initialize saving reminders.
+ * @param {Element} reminderElement
+ * @param {Object} pathConfig
  */
-HealthyNotifications.prototype.initSavingReminders = function () {
-	var self = this,
-		speed = 330,
-		easing = window.mina.backout;
-
-	[].slice.call(window.document.querySelectorAll('.js-reminder'))
-		.forEach(function (reminderElement) {
-			var formElement = reminderElement
+HealthyNotifications.prototype.initSavingReminders =
+	function (reminderElement, pathConfig) {
+		var self = this,
+			formElement = reminderElement
 				.querySelector('.js-reminder-form');
 
-			var reminderAlias = formElement.getAttribute('data-reminder-alias'),
-				reminder = localStore.getData()[reminderAlias];
+		var reminderAlias = formElement.getAttribute('data-reminder-alias'),
+			reminder = localStore.getData()[reminderAlias];
 
-			var s = new Snap(reminderElement.querySelector('svg')),
-				path = s.select('.js-reminder-path');
-
-			formElement.addEventListener('submit', function (event) {
-				event.preventDefault();
-				event.stopPropagation();
-				reminder.interval = formElement.querySelector('[name=interval]')
-					.value;
-				reminder.message = formElement.querySelector('[name=message]')
-					.value;
-				self.saveReminder(reminder);
-				self.saveReminderView(reminder, reminderElement);
-				path.animate({path: path.attr('data-d')}, speed, easing);
-				reminderElement.classList.add('is-edited');
-				reminderElement.classList.remove('is-editing');
-			});
+		formElement.addEventListener('submit', function (event) {
+			event.preventDefault();
+			event.stopPropagation();
+			reminder.interval = formElement.querySelector('[name=interval]')
+				.value;
+			reminder.message = formElement.querySelector('[name=message]')
+				.value;
+			self.saveReminder(reminder);
+			self.saveReminderView(reminder, reminderElement);
+			pathConfig.path.animate({path: pathConfig.initial},
+				pathConfig.speed, pathConfig.easing);
+			reminderElement.classList.add('is-edited');
+			reminderElement.classList.remove('is-editing');
 		});
-};
+	};
 
 /**
  * Toggles reminder.
@@ -219,7 +219,7 @@ HealthyNotifications.prototype.saveReminderView =
 HealthyNotifications.prototype.greeting = function () {
 	setTimeout(function () {
 		notifier.notify(GREETING_MESSAGE);
-	}, 1500);
+	}, GREETING_DELAY);
 };
 
 /**
