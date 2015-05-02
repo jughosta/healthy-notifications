@@ -16,7 +16,7 @@ module.exports = {
 		}
 
 		if (intervalInMinutes === 1) {
-			return 'minute'
+			return 'minute';
 		}
 
 		if (intervalInMinutes === 60) {
