@@ -1,6 +1,8 @@
-var HealthyNotifications = require('./HealthyNotifications'),
-	healthyNotifications = new HealthyNotifications();
+'use strict';
 
-onload = function () {
+var HealthyNotifications = require('./HealthyNotifications');
+
+window.document.addEventListener('DOMContentLoaded', function () {
+	var healthyNotifications = new HealthyNotifications();
 	healthyNotifications.load();
-};
+});

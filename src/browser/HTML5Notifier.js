@@ -6,7 +6,7 @@ module.exports = Notifier;
 
 /**
  * Notifier that uses HTML5 Notification API
- * @param title
+ * @param {string} title
  * @constructor
  */
 function Notifier (title) {
@@ -33,19 +33,18 @@ Notifier.prototype.notify = function (message) {
 	}
 
 	// Let's check if the user is okay to get some notification
-	if (Notification.permission === 'granted') {
+	if (window.Notification.permission === 'granted') {
 		// If it's okay let's create a notification
-		notification = new Notification(title, {
+		notification = new window.Notification(title, {
 			body: message
 		});
-	}
+	} else if (window.Notification.permission !== 'denied') {
+		// Otherwise, we need to ask the user for permission
 
-	// Otherwise, we need to ask the user for permission
-	else if (Notification.permission !== 'denied') {
-		Notification.requestPermission(function (permission) {
+		window.Notification.requestPermission(function (permission) {
 			// If the user is okay, let's create a notification
 			if (permission === 'granted') {
-				notification = new Notification(title, {
+				notification = new window.Notification(title, {
 					body: message
 				});
 			}

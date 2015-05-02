@@ -1,3 +1,5 @@
+'use strict';
+
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	Snap = require('snapsvg'),
@@ -39,7 +41,7 @@ HealthyNotifications.prototype.load = function () {
 			reminder: reminders[reminderAlias]
 		}));
 	});
-	document.body.innerHTML = settingsTemplate({
+	window.document.body.innerHTML = settingsTemplate({
 		reminders: remindersList
 	});
 
@@ -54,11 +56,11 @@ HealthyNotifications.prototype.load = function () {
  */
 HealthyNotifications.prototype.initAnimation = function () {
 	var speed = 330,
-		easing = mina.backout;
+		easing = window.mina.backout;
 
-	[].slice.call(document.querySelectorAll('.js-reminder'))
+	[].slice.call(window.document.querySelectorAll('.js-reminder'))
 		.forEach(function (reminderElement) {
-			var s = Snap(reminderElement.querySelector('svg')),
+			var s = new Snap(reminderElement.querySelector('svg')),
 				path = s.select('.js-reminder-path'),
 				pathHidden = s.select('.js-reminder-path-hidden'),
 				pathConfig = {
@@ -67,11 +69,11 @@ HealthyNotifications.prototype.initAnimation = function () {
 				};
 
 			reminderElement.addEventListener('mouseenter', function () {
-				path.animate({'path': pathConfig.to}, speed, easing);
+				path.animate({path: pathConfig.to}, speed, easing);
 			});
 
 			reminderElement.addEventListener('mouseleave', function () {
-				path.animate({'path': pathConfig.from}, speed, easing);
+				path.animate({path: pathConfig.from}, speed, easing);
 			});
 		});
 };
@@ -82,7 +84,7 @@ HealthyNotifications.prototype.initAnimation = function () {
 HealthyNotifications.prototype.initToggleReminders = function () {
 	var self = this;
 
-	[].slice.call(document.querySelectorAll('.js-reminder'))
+	[].slice.call(window.document.querySelectorAll('.js-reminder'))
 		.forEach(function (reminderElement) {
 			var buttonElement = reminderElement
 				.querySelector('.js-reminder-button-toggle');

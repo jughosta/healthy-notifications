@@ -5,10 +5,14 @@
   "devDependencies": {
     "csstime-gulp-tasks": "^4.0.1",
     "electron-prebuilt": "^0.25.1",
-    "gulp": "^3.8.11"
+    "gulp": "^3.8.11",
+    "jscs": "^1.13.1",
+    "jshint": "^2.7.0",
+    "mocha": "^2.2.4"
   },
   "scripts": {
-    "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./"
+    "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./",
+    "test": "make"
   },
   "dependencies": {
     "gulp-browserify": "^0.5.1",
