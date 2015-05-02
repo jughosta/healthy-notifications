@@ -4,6 +4,10 @@ module.exports = LocalStore;
 
 var LOCAL_STORAGE_KEY = 'localStoreData';
 
+if (typeof window === 'undefined') {
+	var window = {};
+}
+
 /**
  * Local store
  * @param {Object} defaultData
