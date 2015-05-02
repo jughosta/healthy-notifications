@@ -30,7 +30,7 @@ LocalStore.prototype._data = null;
 LocalStore.prototype._defaultData = null;
 
 /**
- * Gets data
+ * Gets data.
  * @returns {Object}
  */
 LocalStore.prototype.getData = function () {
@@ -38,7 +38,15 @@ LocalStore.prototype.getData = function () {
 };
 
 /**
- * Loads data
+ * Gets default data.
+ * @returns {Object}
+ */
+LocalStore.prototype.getDefaultData = function () {
+	return this._defaultData;
+};
+
+/**
+ * Loads data.
  * @returns {Object}
  */
 LocalStore.prototype.load = function () {
@@ -57,7 +65,7 @@ LocalStore.prototype.load = function () {
 };
 
 /**
- * Saves data
+ * Saves data.
  * @param {Object} data
  */
 LocalStore.prototype.save = function (data) {

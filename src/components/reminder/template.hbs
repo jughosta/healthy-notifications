@@ -13,7 +13,7 @@
 			<label class="reminder__label" for="js-reminder-{{reminder.id}}-interval">Interval in minutes:</label>
 			<input id="js-reminder-{{reminder.id}}-interval"
 				   name="interval" type="number" class="reminder__input"
-				   step="0.5" min="1" value="{{reminder.interval}}"/>
+				   step="0.5" min="0.5" max="1440" value="{{reminder.interval}}"/>
 		</div>
 		<div class="reminder__form-item">
 			<label class="reminder__label" for="js-reminder-{{reminder.id}}-message">Message:</label>
@@ -27,9 +27,10 @@
 	<div class="reminder__options">
 		<div class="reminder__title">{{reminder.title}}</div>
 		<div class="reminder__interval">
-			<span class="js-reminder-interval">{{reminder.interval}}</span>m
+			Reminds every <span class="js-reminder-interval">{{interval}}</span>
 		</div>
-		<div class="js-reminder-message reminder__message">{{reminder.message}}</div>
+		<div class="reminder__message">
+			«<span class="js-reminder-message">{{reminder.message}}</span>»</div>
 	</div>
 	<div class="reminder__options reminder__settings">
 		<div>

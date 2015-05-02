@@ -6,10 +6,12 @@ var settingsTemplate = require('./templates/settings/template'),
 	config = require('../../config'),
 	Notifier = require('./HTML5Notifier'),
 	notifier = new Notifier(config.title, config.icon),
+	helpers = require('./helpers'),
 	LocalStore = require('./LocalStore'),
 	localStore = new LocalStore(require('./reminders'));
 
-var GREETING_MESSAGE = 'Hi! Have a nice day!',
+var MAX_MESSAGE_LENGTH = 200,
+	GREETING_MESSAGE = 'Hi! Have a nice day!',
 	GREETING_DELAY = 1500,
 	INTERVAL_RATIO = 60 * 1000; // in minutes
 
@@ -37,9 +39,13 @@ HealthyNotifications.prototype.load = function () {
 	var remindersList = [],
 		reminders = localStore.getData();
 	Object.keys(reminders).forEach(function (reminderAlias) {
+		reminders[reminderAlias].interval =
+			Number(reminders[reminderAlias].interval);
 		remindersList.push(reminderTemplate({
 			alias: reminderAlias,
-			reminder: reminders[reminderAlias]
+			reminder: reminders[reminderAlias],
+			interval: helpers
+				.getIntervalShortString(reminders[reminderAlias].interval)
 		}));
 	});
 	window.document.body.innerHTML = settingsTemplate({
@@ -93,6 +99,7 @@ HealthyNotifications.prototype.initAnimation =
 			if (reminderElement.classList.contains('is-edited')) {
 				return;
 			}
+			reminderElement.classList.add('is-active');
 			pathConfig.path.animate({path: pathConfig.active},
 				pathConfig.speed, pathConfig.easing);
 		});
@@ -101,12 +108,14 @@ HealthyNotifications.prototype.initAnimation =
 			if (reminderElement.classList.contains('is-editing')) {
 				return;
 			}
-			if (reminderElement.classList.contains('is-edited')) {
-				setTimeout(function () {
-					reminderElement.classList.remove('is-edited');
-				}, 5000);
+			if (reminderElement.classList.contains('is-submitted')) {
+				reminderElement.classList.remove('is-submitted');
 				return;
 			}
+			if (reminderElement.classList.contains('is-edited')) {
+				reminderElement.classList.remove('is-edited');
+			}
+			reminderElement.classList.remove('is-active');
 			pathConfig.path.animate({path: pathConfig.initial},
 				pathConfig.speed, pathConfig.easing);
 		});
@@ -144,12 +153,15 @@ HealthyNotifications.prototype.initToggleReminders =
 HealthyNotifications.prototype.initEditingReminders =
 	function (reminderElement, pathConfig) {
 		var buttonElement = reminderElement
-			.querySelector('.js-reminder-button-edit');
+				.querySelector('.js-reminder-button-edit'),
+			intervalElement = reminderElement.querySelector('[name=interval]');
 
 		buttonElement.addEventListener('click', function () {
 			reminderElement.classList.add('is-editing');
+			reminderElement.classList.remove('is-active');
 			pathConfig.path.animate({path: pathConfig.editing},
 				pathConfig.speed, pathConfig.easing);
+			intervalElement.focus();
 		});
 	};
 
@@ -165,20 +177,25 @@ HealthyNotifications.prototype.initSavingReminders =
 				.querySelector('.js-reminder-form');
 
 		var reminderAlias = formElement.getAttribute('data-reminder-alias'),
-			reminder = localStore.getData()[reminderAlias];
+			reminder = localStore.getData()[reminderAlias],
+			defaultReminder = localStore.getDefaultData()[reminderAlias];
 
 		formElement.addEventListener('submit', function (event) {
 			event.preventDefault();
 			event.stopPropagation();
-			reminder.interval = formElement.querySelector('[name=interval]')
-				.value;
-			reminder.message = formElement.querySelector('[name=message]')
-				.value;
+			reminder.interval = Number(formElement
+				.querySelector('[name=interval]').value);
+			reminder.message =
+				helpers.trimEnd(
+					formElement.querySelector('[name=message]').value,
+					MAX_MESSAGE_LENGTH
+				) || defaultReminder.message;
 			self.saveReminder(reminder);
 			self.saveReminderView(reminder, reminderElement);
 			pathConfig.path.animate({path: pathConfig.initial},
 				pathConfig.speed, pathConfig.easing);
 			reminderElement.classList.add('is-edited');
+			reminderElement.classList.add('is-submitted');
 			reminderElement.classList.remove('is-editing');
 		});
 	};
@@ -209,7 +226,7 @@ HealthyNotifications.prototype.saveReminder = function (reminder) {
 HealthyNotifications.prototype.saveReminderView =
 	function (reminder, reminderElement) {
 		reminderElement.querySelector('.js-reminder-interval')
-			.innerText = reminder.interval;
+			.innerText = helpers.getIntervalShortString(reminder.interval);
 		reminderElement.querySelector('.js-reminder-message')
 			.innerText = reminder.message;
 	};

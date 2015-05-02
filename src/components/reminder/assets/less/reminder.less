@@ -90,11 +90,11 @@
 	display: none;
 	padding-top: 220px;
 
-	.reminder:not(.is-edited):hover & {
+	.reminder.is-active & {
 		display: block;
 	}
 
-	.reminder.is-editing:hover & {
+	.reminder.is-editing & {
 		display: none;
 	}
 }
@@ -121,9 +121,10 @@
 	border-bottom-right-radius: 40%;
 	border-bottom-left-radius: 40%;
 	transition: height .2s ease, color .2s ease;
+	word-wrap: break-word;
 
-	.reminder.is-editing &,
-	.reminder:not(.is-edited):hover & {
+	.reminder.is-active &,
+	.reminder.is-editing & {
 		height: 0;
 		color: #fff;
 	}
@@ -131,7 +132,7 @@
 
 .reminder__interval {
 	overflow: hidden;
-	height: 24px;
+	height: 28px;
 	transition: height .2s ease, color .2s ease;
 
 	.reminder.is-editing & {
