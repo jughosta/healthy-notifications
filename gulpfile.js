@@ -7,6 +7,7 @@ var gulp = require('gulp'),
 	csstime = require('csstime-gulp-tasks'),
 	browserify = require('gulp-browserify'),
 	handlebars = require('gulp-handlebars'),
+	uglify = require('gulp-uglify'),
 	defineModule = require('gulp-define-module'),
 	del = require('del');
 
@@ -57,6 +58,12 @@ gulp.task('watch', ['browserify'], function () {
 	);
 });
 
-gulp.task('release', ['browserify'], function () {
+gulp.task('uglify', ['browserify'], function () {
+	return gulp.src('build/bundle.js')
+		.pipe(uglify())
+		.pipe(gulp.dest('build'));
+});
+
+gulp.task('release', ['uglify'], function () {
 	gulp.start('remove-tmp');
 });
