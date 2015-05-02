@@ -2,8 +2,12 @@ var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	reminders = require('./reminders').reminders,
 	Snap = require('snapsvg'),
-	notifier = require('./notifier'),
-	config = require('../../../config');
+	config = require('../../../config'),
+	Notifier = require('./HTML5Notifier'),
+	notifier = new Notifier(config.title);
+
+var GREETING_MESSAGE = 'Hi! Have a nice day!',
+	INTERVAL_RATIO = 60 * 1000; // in minutes
 
 module.exports = HealthyNotifications;
 
@@ -65,7 +69,7 @@ HealthyNotifications.prototype.initAnimation = function () {
  * Greeting and checking permissions.
  */
 HealthyNotifications.prototype.greeting = function () {
-	notifier.notify(config.title, 'Hi! Have a nice day!');
+	notifier.notify(GREETING_MESSAGE);
 };
 
 /**
@@ -87,7 +91,11 @@ HealthyNotifications.prototype.startTimerForReminder = function (reminder) {
 		clearInterval(reminder.timer);
 	}
 
+	if (!reminder.isEnable) {
+		return;
+	}
+
 	reminder.timer = setInterval(function () {
-		notifier.notify(config.title, reminder.message);
-	}, reminder.interval * 60 * 1000); // in minutes
+		notifier.notify(reminder.message);
+	}, reminder.interval * INTERVAL_RATIO); // in minutes
 };
