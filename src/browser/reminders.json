@@ -4,7 +4,7 @@
 			"id": 0,
 			"title": "Rest",
 			"message": "Take a break",
-			"interval": "45",
+			"interval": "0.5",
 			"isEnable": true
 		},
 		{

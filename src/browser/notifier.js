@@ -1,5 +1,7 @@
 'use strict';
 
+var DELAY_BEFORE_CLOSE = 4000;
+
 module.exports = {
 
 	/**
@@ -37,5 +39,11 @@ module.exports = {
 
 		// At last, if the user already denied any notification, and you
 		// want to be respectful there is no need to bother them any more.
+
+		if (notification) {
+			setTimeout(function () {
+				notification.close();
+			}, DELAY_BEFORE_CLOSE);
+		}
 	}
 };

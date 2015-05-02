@@ -1,14 +1,23 @@
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	reminders = require('./reminders').reminders,
-	Snap = require('snapsvg');
+	Snap = require('snapsvg'),
+	notifier = require('./notifier'),
+	config = require('../../../config');
 
 module.exports = HealthyNotifications;
 
+/**
+ * Healthy notifications
+ * @constructor
+ */
 function HealthyNotifications () {
 
 }
 
+/**
+ * Loads reminders.
+ */
 HealthyNotifications.prototype.load = function () {
 	var remindersList = [];
 	reminders.forEach(function (reminder) {
@@ -21,8 +30,13 @@ HealthyNotifications.prototype.load = function () {
 	});
 
 	this.initAnimation();
+	this.greeting();
+	this.startTimers();
 };
 
+/**
+ * Initializes onHover animation.
+ */
 HealthyNotifications.prototype.initAnimation = function () {
 	var speed = 330,
 		easing = mina.backout;
@@ -45,4 +59,35 @@ HealthyNotifications.prototype.initAnimation = function () {
 				path.animate({'path': pathConfig.from}, speed, easing);
 			});
 		});
+};
+
+/**
+ * Greeting and checking permissions.
+ */
+HealthyNotifications.prototype.greeting = function () {
+	notifier.notify(config.title, 'Hi! Have a nice day!');
+};
+
+/**
+ * Starts timers.
+ */
+HealthyNotifications.prototype.startTimers = function () {
+	var self = this;
+	reminders.forEach(function (reminder) {
+		self.startTimerForReminder(reminder);
+	});
+};
+
+/**
+ * Starts timer for reminder.
+ * @param {Object} reminder
+ */
+HealthyNotifications.prototype.startTimerForReminder = function (reminder) {
+	if (reminder.timer) {
+		clearInterval(reminder.timer);
+	}
+
+	reminder.timer = setInterval(function () {
+		notifier.notify(config.title, reminder.message);
+	}, reminder.interval * 60 * 1000); // in minutes
 };
