@@ -116,24 +116,25 @@ HealthyNotifications.prototype.initAnimation =
  * Initialize toggling reminders.
  * @param {Element} reminderElement
  */
-HealthyNotifications.prototype.initToggleReminders = function (reminderElement) {
-	var self = this,
-		buttonElement = reminderElement
-			.querySelector('.js-reminder-button-toggle');
+HealthyNotifications.prototype.initToggleReminders =
+	function (reminderElement) {
+		var self = this,
+			buttonElement = reminderElement
+				.querySelector('.js-reminder-button-toggle');
 
-	var reminderAlias = buttonElement.getAttribute('data-reminder-alias'),
-		reminder = localStore.getData()[reminderAlias];
+		var reminderAlias = buttonElement.getAttribute('data-reminder-alias'),
+			reminder = localStore.getData()[reminderAlias];
 
-	buttonElement.addEventListener('click', function () {
-		self.toggleReminder(reminder);
-		buttonElement.innerText =
-			reminder.isEnabled ? 'Disable' : 'Enable';
+		buttonElement.addEventListener('click', function () {
+			self.toggleReminder(reminder);
+			buttonElement.innerText =
+				reminder.isEnabled ? 'Disable' : 'Enable';
 
-		reminderElement.classList[
-			reminder.isEnabled ? 'remove' : 'add'
-			]('is-disabled');
-	});
-};
+			reminderElement.classList[
+				reminder.isEnabled ? 'remove' : 'add'
+				]('is-disabled');
+		});
+	};
 
 /**
  * Initialize editing reminders.
