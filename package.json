@@ -11,6 +11,10 @@
     "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./"
   },
   "dependencies": {
+    "gulp-browserify": "^0.5.1",
+    "gulp-define-module": "^0.1.3",
+    "gulp-handlebars": "^4.0.0",
+    "handlebars": "^3.0.3",
     "snapsvg": "^0.4.0"
   }
 }
