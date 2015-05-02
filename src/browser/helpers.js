@@ -38,7 +38,6 @@ module.exports = {
 			return intervalInMinutes + ' minutes';
 		}
 
-
 		hoursWithoutSeconds = Math.floor(intervalInMinutes);
 		minutes = hoursWithoutSeconds % 60;
 		return Math.floor(hoursWithoutSeconds / 60) + 'h' +
