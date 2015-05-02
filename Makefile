@@ -11,4 +11,7 @@ test:
 		$(TESTS) \
 		--bail
 
+release:
+	./node_modules/.bin/gulp csstime-mode-release && ./node_modules/.bin/gulp release
+
 .PHONY: test

@@ -17,10 +17,12 @@
   },
   "scripts": {
     "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./",
-    "test": "make"
+    "test": "make",
+    "build": "make release"
   },
   "dependencies": {
     "csstime-gulp-tasks": "^4.0.1",
+    "del": "^1.1.1",
     "gulp-browserify": "^0.5.1",
     "gulp-define-module": "^0.1.3",
     "gulp-handlebars": "^4.0.0",

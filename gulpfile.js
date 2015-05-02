@@ -7,7 +7,8 @@ var gulp = require('gulp'),
 	csstime = require('csstime-gulp-tasks'),
 	browserify = require('gulp-browserify'),
 	handlebars = require('gulp-handlebars'),
-	defineModule = require('gulp-define-module');
+	defineModule = require('gulp-define-module'),
+	del = require('del');
 
 csstime.loadGulpTasks(gulp, config);
 
@@ -20,6 +21,10 @@ gulp.task('publish-snapsvg', function () {
 		.pipe(gulp.dest('build'));
 });
 
+gulp.task('remove-tmp', function (cb) {
+	del(['build/tmp'], cb);
+});
+
 gulp.task('copy-server', function () {
 	return gulp.src(['src/server.js', 'config.json'])
 		.pipe(gulp.dest('build'));
@@ -27,11 +32,11 @@ gulp.task('copy-server', function () {
 
 gulp.task('copy-browser', ['copy-server'], function () {
 	return gulp.src('src/browser/*.*')
-		.pipe(gulp.dest('build/__csstime-tmp/browser'));
+		.pipe(gulp.dest('build/tmp/browser'));
 });
 
 gulp.task('browserify', ['copy-browser', 'handlebars'], function () {
-	return gulp.src('build/__csstime-tmp/browser/bundle.js')
+	return gulp.src('build/tmp/browser/bundle.js')
 		.pipe(browserify())
 		.pipe(gulp.dest('build/'));
 });
@@ -42,7 +47,7 @@ gulp.task('handlebars', function () {
 			handlebars: require('handlebars')
 		}))
 		.pipe(defineModule('node'))
-		.pipe(gulp.dest('build/__csstime-tmp/browser/templates/'));
+		.pipe(gulp.dest('build/tmp/browser/templates/'));
 });
 
 gulp.task('watch', ['browserify'], function () {
@@ -50,4 +55,8 @@ gulp.task('watch', ['browserify'], function () {
 		['src/**/*.js', 'src/**/*.json', 'src/components/**/*.hbs', 'config.json'],
 		['browserify']
 	);
+});
+
+gulp.task('release', ['browserify'], function () {
+	gulp.start('remove-tmp');
 });
