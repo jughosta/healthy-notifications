@@ -1,25 +1,23 @@
 {
-	"reminders": [
-		{
-			"id": 0,
-			"title": "Rest",
-			"message": "Take a break",
-			"interval": "0.5",
-			"isEnable": true
-		},
-		{
-			"id": 1,
-			"title": "Water",
-			"message": "Drink water",
-			"interval": "60",
-			"isEnable": true
-		},
-		{
-			"id": 2,
-			"title": "Posture",
-			"message": "Keep a good posture",
-			"interval": "30",
-			"isEnable": false
-		}
-	]
+	"rest": {
+		"id": "0",
+		"title": "Rest",
+		"message": "Take a break",
+		"interval": "0.5",
+		"isEnabled": true
+	},
+	"water": {
+		"id": "1",
+		"title": "Water",
+		"message": "Drink water",
+		"interval": "60",
+		"isEnabled": true
+	},
+	"posture": {
+		"id": "2",
+		"title": "Posture",
+		"message": "Keep a good posture",
+		"interval": "30",
+		"isEnabled": false
+	}
 }

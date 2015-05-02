@@ -1,10 +1,11 @@
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
-	reminders = require('./reminders').reminders,
 	Snap = require('snapsvg'),
 	config = require('../../../config'),
 	Notifier = require('./HTML5Notifier'),
-	notifier = new Notifier(config.title);
+	notifier = new Notifier(config.title),
+	LocalStore = require('./LocalStore'),
+	localStore = new LocalStore(require('./reminders'));
 
 var GREETING_MESSAGE = 'Hi! Have a nice day!',
 	INTERVAL_RATIO = 60 * 1000; // in minutes
@@ -16,17 +17,26 @@ module.exports = HealthyNotifications;
  * @constructor
  */
 function HealthyNotifications () {
-
+	this._timers = {};
 }
+
+/**
+ * Timers for all reminders.
+ * @type {Object}
+ * @private
+ */
+HealthyNotifications.prototype._timers = null;
 
 /**
  * Loads reminders.
  */
 HealthyNotifications.prototype.load = function () {
-	var remindersList = [];
-	reminders.forEach(function (reminder) {
+	var remindersList = [],
+		reminders = localStore.getData();
+	Object.keys(reminders).forEach(function (reminderAlias) {
 		remindersList.push(reminderTemplate({
-			reminder: reminder
+			alias: reminderAlias,
+			reminder: reminders[reminderAlias]
 		}));
 	});
 	document.body.innerHTML = settingsTemplate({
@@ -34,8 +44,9 @@ HealthyNotifications.prototype.load = function () {
 	});
 
 	this.initAnimation();
-	this.greeting();
+	this.initToggleReminders();
 	this.startTimers();
+	this.greeting();
 };
 
 /**
@@ -46,23 +57,59 @@ HealthyNotifications.prototype.initAnimation = function () {
 		easing = mina.backout;
 
 	[].slice.call(document.querySelectorAll('.js-reminder'))
-		.forEach(function (el) {
-			var s = Snap(el.querySelector('svg')),
-				path = s.select('#js-reminder-path'),
-				pathHidden = s.select('#js-reminder-path-hidden'),
+		.forEach(function (reminderElement) {
+			var s = Snap(reminderElement.querySelector('svg')),
+				path = s.select('.js-reminder-path'),
+				pathHidden = s.select('.js-reminder-path-hidden'),
 				pathConfig = {
 					from: path.attr('d'),
 					to: pathHidden.attr('d')
 				};
 
-			el.addEventListener('mouseenter', function () {
+			reminderElement.addEventListener('mouseenter', function () {
 				path.animate({'path': pathConfig.to}, speed, easing);
 			});
 
-			el.addEventListener('mouseleave', function () {
+			reminderElement.addEventListener('mouseleave', function () {
 				path.animate({'path': pathConfig.from}, speed, easing);
 			});
 		});
+};
+
+/**
+ * Initialize toggling reminders.
+ */
+HealthyNotifications.prototype.initToggleReminders = function () {
+	var self = this;
+
+	[].slice.call(document.querySelectorAll('.js-reminder'))
+		.forEach(function (reminderElement) {
+			var buttonElement = reminderElement
+				.querySelector('.js-reminder-button-toggle');
+
+			var reminderAlias = buttonElement.getAttribute('data-reminder-alias'),
+				reminder = localStore.getData()[reminderAlias];
+
+			buttonElement.addEventListener('click', function () {
+				self.toggleReminder(reminder);
+				buttonElement.innerText =
+					reminder.isEnabled ? 'Disable' : 'Enable';
+
+				reminderElement.classList[
+					reminder.isEnabled ? 'remove' : 'add'
+					]('is-disabled');
+			});
+		});
+};
+
+/**
+ * Toggles reminder.
+ * @param {Object} reminder
+ */
+HealthyNotifications.prototype.toggleReminder = function (reminder) {
+	reminder.isEnabled = !reminder.isEnabled;
+	localStore.save(localStore.getData());
+	this.startTimerForReminder(reminder);
 };
 
 /**
@@ -76,9 +123,10 @@ HealthyNotifications.prototype.greeting = function () {
  * Starts timers.
  */
 HealthyNotifications.prototype.startTimers = function () {
-	var self = this;
-	reminders.forEach(function (reminder) {
-		self.startTimerForReminder(reminder);
+	var self = this,
+		reminders = localStore.getData();
+	Object.keys(reminders).forEach(function (reminderAlias) {
+		self.startTimerForReminder(reminders[reminderAlias]);
 	});
 };
 
@@ -87,15 +135,35 @@ HealthyNotifications.prototype.startTimers = function () {
  * @param {Object} reminder
  */
 HealthyNotifications.prototype.startTimerForReminder = function (reminder) {
-	if (reminder.timer) {
-		clearInterval(reminder.timer);
+	if (reminder.id in this._timers) {
+		clearInterval(this._timers[reminder.id]);
+
+		console.log('HealthyNotifications: stopped timer for ' +
+			JSON.stringify(reminder));
 	}
 
-	if (!reminder.isEnable) {
+	if (!reminder.isEnabled) {
 		return;
 	}
 
-	reminder.timer = setInterval(function () {
-		notifier.notify(reminder.message);
+	var self = this;
+
+	this._timers[reminder.id] = setInterval(function () {
+		self.onNotify(reminder);
 	}, reminder.interval * INTERVAL_RATIO); // in minutes
+
+	console.log('HealthyNotifications: started timer for ' +
+		JSON.stringify(reminder));
+};
+
+/**
+ * Event: onNotify
+ * @param {Object} reminder
+ */
+HealthyNotifications.prototype.onNotify = function (reminder) {
+	if (!reminder.isEnabled) {
+		return;
+	}
+
+	notifier.notify(reminder.message);
 };

@@ -7,6 +7,7 @@
 	margin: @theme-item-margin;
 	font: 16px 'Trebuchet MS';
 	background-color: #2fbf71;
+	transition: background-color .5s ease;
 
 	&.is-disabled {
 		background-color: #ccc;
@@ -15,6 +16,10 @@
 
 .reminder__caption {
 	fill: #fff;
+
+	&.is-hidden {
+		display: none;
+	}
 }
 
 .reminder__button {
