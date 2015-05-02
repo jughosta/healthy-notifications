@@ -2,11 +2,8 @@
 
 module.exports = LocalStore;
 
-var LOCAL_STORAGE_KEY = 'localStoreData';
-
-if (typeof window === 'undefined') {
-	var window = {};
-}
+var LOCAL_STORAGE_KEY = 'localStoreData',
+	windowObject = (typeof window === 'undefined') ? {} : window;
 
 /**
  * Local store
@@ -45,11 +42,11 @@ LocalStore.prototype.getData = function () {
  * @returns {Object}
  */
 LocalStore.prototype.load = function () {
-	if (!window.localStorage) {
+	if (!windowObject.localStorage) {
 		return this._defaultData;
 	}
 
-	var data = window.localStorage.getItem(LOCAL_STORAGE_KEY);
+	var data = windowObject.localStorage.getItem(LOCAL_STORAGE_KEY);
 	if (!data) {
 		return this._defaultData;
 	}
@@ -66,11 +63,11 @@ LocalStore.prototype.load = function () {
 LocalStore.prototype.save = function (data) {
 	this._data = data;
 
-	if (!window.localStorage) {
+	if (!windowObject.localStorage) {
 		return;
 	}
 
-	window.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
+	windowObject.localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(data));
 
 	console.log('LocalStore: saved ' + JSON.stringify(data));
 };
@@ -81,11 +78,11 @@ LocalStore.prototype.save = function (data) {
 LocalStore.prototype.restore = function () {
 	this._data = this._defaultData;
 
-	if (!window.localStorage) {
+	if (!windowObject.localStorage) {
 		return;
 	}
 
-	window.localStorage.removeItem(LOCAL_STORAGE_KEY);
+	windowObject.localStorage.removeItem(LOCAL_STORAGE_KEY);
 
 	console.log('LocalStore: restored ' + JSON.stringify(this._data));
 };

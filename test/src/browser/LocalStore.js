@@ -23,11 +23,23 @@ describe('src/browser/LocalStore.js', function () {
 		done();
 	});
 
-	it('should restore default data', function (done) {
+	it('should update data', function (done) {
 		var testData = {test: 'testValue'},
+			newTestData = {newTest: 'newTestValue'},
 			localStore = new LocalStore(testData);
 
-		localStore.save({newTest: 'newTestValue'});
+		localStore.save(newTestData);
+
+		assert.deepEqual(localStore.getData(), newTestData);
+		done();
+	});
+
+	it('should restore default data', function (done) {
+		var testData = {test: 'testValue'},
+			newTestData = {newTest: 'newTestValue'},
+			localStore = new LocalStore(testData);
+
+		localStore.save(newTestData);
 		localStore.restore();
 
 		assert.deepEqual(localStore.getData(), testData);

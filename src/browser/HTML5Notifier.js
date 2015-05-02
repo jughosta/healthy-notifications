@@ -7,17 +7,26 @@ module.exports = Notifier;
 /**
  * Notifier that uses HTML5 Notification API
  * @param {string} title
+ * @param {string} icon
  * @constructor
  */
-function Notifier (title) {
-	this.title = title || this.title;
+function Notifier (title, icon) {
+	this._title = title || this._title;
+	this._icon = icon || null;
 }
 
 /**
  * Title
  * @type {string}
  */
-Notifier.prototype.title = 'Notifier';
+Notifier.prototype._title = 'Notifier';
+
+/**
+ * Icon
+ * @type {string}
+ * @private
+ */
+Notifier.prototype._icon = null;
 
 /**
  * Notifies.
@@ -25,7 +34,8 @@ Notifier.prototype.title = 'Notifier';
  */
 Notifier.prototype.notify = function (message) {
 	var notification = null,
-		title = this.title;
+		title = this._title,
+		icon = this._icon;
 
 	// Let's check if the browser supports notifications
 	if (!('Notification' in window)) {
@@ -36,7 +46,8 @@ Notifier.prototype.notify = function (message) {
 	if (window.Notification.permission === 'granted') {
 		// If it's okay let's create a notification
 		notification = new window.Notification(title, {
-			body: message
+			body: message,
+			icon: icon
 		});
 	} else if (window.Notification.permission !== 'denied') {
 		// Otherwise, we need to ask the user for permission
@@ -45,7 +56,8 @@ Notifier.prototype.notify = function (message) {
 			// If the user is okay, let's create a notification
 			if (permission === 'granted') {
 				notification = new window.Notification(title, {
-					body: message
+					body: message,
+					icon: icon
 				});
 			}
 		});

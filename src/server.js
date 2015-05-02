@@ -28,11 +28,12 @@ app.on('ready', function () {
 		width: config.size.width,
 		height: config.size.height,
 		'min-width': config.size.width,
-		'min-height': config.size.height
+		'min-height': config.size.height,
+		icon: 'file://' + __dirname + '/' + config.icon
 	});
 
 	// and load the index.html of the app.
-	mainWindow.loadUrl('file://' + __dirname + '/../build/index.html');
+	mainWindow.loadUrl('file://' + __dirname + '/' + config.index);
 
 	// Emitted when the window is closed.
 	mainWindow.on('closed', function () {

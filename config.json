@@ -3,5 +3,7 @@
 	"size": {
 		"width": 900,
 		"height": 560
-	}
+	},
+	"icon": "icon.png",
+	"index": "index.html"
 }

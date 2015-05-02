@@ -3,9 +3,9 @@
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	Snap = require('snapsvg'),
-	config = require('../../../config'),
+	config = require('../../config'),
 	Notifier = require('./HTML5Notifier'),
-	notifier = new Notifier(config.title),
+	notifier = new Notifier(config.title, config.icon),
 	LocalStore = require('./LocalStore'),
 	localStore = new LocalStore(require('./reminders'));
 
@@ -118,7 +118,9 @@ HealthyNotifications.prototype.toggleReminder = function (reminder) {
  * Greeting and checking permissions.
  */
 HealthyNotifications.prototype.greeting = function () {
-	notifier.notify(GREETING_MESSAGE);
+	setTimeout(function () {
+		notifier.notify(GREETING_MESSAGE);
+	}, 1500);
 };
 
 /**
