@@ -5,6 +5,7 @@
 	width: @theme-item-width;
 	height: @theme-item-height;
 	margin: @theme-item-margin;
+	color: #474350;
 	font: 16px 'Trebuchet MS';
 	background-color: #2fbf71;
 	transition: background-color .5s ease;
@@ -65,9 +66,19 @@
 }
 
 .reminder__message {
-	color: #474350;
+	overflow: hidden;
+	height: 230px;
+	padding: 0 20px;
+	border-bottom-right-radius: 40%;
+	border-bottom-left-radius: 40%;
+	transition: height .2s ease, color .2s ease;
+
+	.reminder:hover & {
+		height: 0;
+		color: #fff;
+	}
 }
 
 .reminder__interval {
-	margin-top: 5px;
+	margin-bottom: 5px;
 }

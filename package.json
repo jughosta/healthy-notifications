@@ -18,7 +18,8 @@
   "scripts": {
     "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./",
     "test": "make",
-    "build": "make release"
+    "build": "make release",
+    "watch": "make watch"
   },
   "dependencies": {
     "csstime-gulp-tasks": "^4.0.1",
