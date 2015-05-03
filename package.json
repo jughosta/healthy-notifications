@@ -2,7 +2,7 @@
   "name": "healthy-notifications",
   "description": "Healthy Notifications which will remind you to drink water, to keep a good posture and to take a rest",
   "author": "JuliaRechkunova <julia.rechkunova@gmail.com>",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "repository": {
     "type": "git",
     "url": "git@github.com:JuliaRechkunova/healthy-notifications.git"

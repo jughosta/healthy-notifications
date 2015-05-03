@@ -3,21 +3,21 @@
 		"id": "0",
 		"title": "Rest",
 		"message": "Take a break",
-		"interval": "0.5",
+		"interval": 45,
 		"isEnabled": true
 	},
 	"water": {
 		"id": "1",
 		"title": "Water",
 		"message": "Drink water",
-		"interval": "60",
+		"interval": 60,
 		"isEnabled": true
 	},
 	"posture": {
 		"id": "2",
 		"title": "Posture",
 		"message": "Keep a good posture",
-		"interval": "30",
-		"isEnabled": false
+		"interval": 30,
+		"isEnabled": true
 	}
 }
