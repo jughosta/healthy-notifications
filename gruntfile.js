@@ -3,7 +3,7 @@
 var packageConfig = require('./package.json'),
 	config = require('./config.json');
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
 	grunt.initConfig({
 		'build-atom-shell': {
 			tag: 'v0.25.2',
