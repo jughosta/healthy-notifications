@@ -26,6 +26,10 @@ gulp.task('remove-tmp', function (cb) {
 	del(['build/tmp'], cb);
 });
 
+gulp.task('remove-server', function (cb) {
+	del(['build/server.js', 'build/config.json'], cb);
+});
+
 gulp.task('copy-server', function () {
 	return gulp.src(['src/server.js', 'config.json'])
 		.pipe(gulp.dest('build'));
@@ -58,12 +62,12 @@ gulp.task('watch', ['browserify'], function () {
 	);
 });
 
-gulp.task('uglify', ['browserify'], function () {
+gulp.task('uglify', ['remove-server'], function () {
 	return gulp.src('build/bundle.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('build'));
 });
 
-gulp.task('release', ['uglify'], function () {
+gulp.task('release', ['browserify'], function () {
 	gulp.start('remove-tmp');
 });

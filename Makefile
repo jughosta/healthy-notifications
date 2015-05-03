@@ -14,6 +14,9 @@ test:
 release:
 	./node_modules/.bin/gulp csstime-mode-release && ./node_modules/.bin/gulp release
 
+release-web:
+	make release && ./node_modules/.bin/gulp uglify
+
 watch:
 	./node_modules/.bin/gulp csstime-mode-watch & ./node_modules/.bin/gulp watch
 
