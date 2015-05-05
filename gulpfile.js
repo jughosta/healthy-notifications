@@ -57,7 +57,10 @@ gulp.task('handlebars', function () {
 
 gulp.task('watch', ['browserify'], function () {
 	gulp.watch(
-		['src/**/*.js', 'src/**/*.json', 'src/components/**/*.hbs', 'src/config.json'],
+		[
+			'src/**/*.js', 'src/**/*.json',
+			'src/components/**/*.hbs', 'src/config.json'
+		],
 		['browserify']
 	);
 });
@@ -83,7 +86,9 @@ gulp.task('electron:unzip', ['electron:clear'], function (cb) {
 	var extract = require('extract-zip'),
 		replace = require('gulp-replace'),
 		packageConfig = require('./src/package.json');
-	extract('node_modules/electron-prebuilt/' + ELECTRON_BUILD, {dir: 'build/electron'},
+	extract(
+		'node_modules/electron-prebuilt/' + ELECTRON_BUILD,
+		{dir: 'build/electron'},
 		function (error) {
 			if (error) {
 				cb(error);
@@ -91,9 +96,12 @@ gulp.task('electron:unzip', ['electron:clear'], function (cb) {
 			}
 
 			gulp.src('build/electron/Electron.app/Contents/**/Info.plist')
-				.pipe(replace('<string>Electron</string>', '<string>' + packageConfig.productName + '</string>'))
-				.pipe(replace('<string>Electron Helper', '<string>' + packageConfig.productName + ' Helper'))
-				//.pipe(replace('<string>com.github.electron', '<string>com.github.' + packageConfig.name))
+				.pipe(replace('<string>Electron</string>', '<string>' +
+					packageConfig.productName + '</string>'))
+				.pipe(replace('<string>Electron Helper', '<string>' +
+					packageConfig.productName + ' Helper'))
+				//.pipe(replace('<string>com.github.electron',
+				// '<string>com.github.' + packageConfig.name))
 				.pipe(gulp.dest('build/electron/Electron.app/Contents/'))
 				.on('end', cb);
 		});
