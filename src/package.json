@@ -1,0 +1,5 @@
+{
+  "name": "healthy-notifications",
+  "productName": "HealthyNotifications",
+  "main": "server.js"
+}

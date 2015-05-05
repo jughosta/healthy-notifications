@@ -3,7 +3,7 @@
 var app = require('app'),  // Module to control application life.
 	// Module to create native browser window.
 	BrowserWindow = require('browser-window'),
-	config = require('../config.json');
+	config = require('./config.json');
 
 // Report crashes to our server.
 require('crash-reporter').start();

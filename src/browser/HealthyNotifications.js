@@ -3,7 +3,7 @@
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	Snap = require('snapsvg'),
-	config = require('../../config'),
+	config = require('../../../src/config'),
 	Notifier = require('./HTML5Notifier'),
 	notifier = new Notifier(config.title, config.icon),
 	helpers = require('./helpers'),

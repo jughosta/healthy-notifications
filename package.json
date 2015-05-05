@@ -2,7 +2,7 @@
   "name": "healthy-notifications",
   "description": "Healthy Notifications which will remind you to drink water, to keep a good posture and to take a rest",
   "author": "JuliaRechkunova <julia.rechkunova@gmail.com>",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "repository": {
     "type": "git",
     "url": "git@github.com:JuliaRechkunova/healthy-notifications.git"
@@ -10,17 +10,20 @@
   "main": "build/server.js",
   "devDependencies": {
     "electron-prebuilt": "^0.25.1",
-    "grunt": "^0.4.5",
-    "grunt-build-atom-shell": "^2.0.4",
+    "extract-zip": "^1.0.3",
     "gulp": "^3.8.11",
+    "gulp-download": "0.0.1",
+    "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.3",
     "jscs": "^1.13.1",
     "jshint": "^2.7.0",
     "mocha": "^2.2.4"
   },
   "scripts": {
-    "launch": "./../electron-v0.25.1-darwin-x64/Electron.app/Contents/MacOS/Electron ./",
+    "launch": "./node_modules/.bin/electron ./",
     "test": "make",
-    "build": "make release-web",
+    "build-web": "make release-web",
+    "build-desktop": "make release-desktop",
     "watch": "make watch"
   },
   "dependencies": {

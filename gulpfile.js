@@ -27,11 +27,11 @@ gulp.task('remove-tmp', function (cb) {
 });
 
 gulp.task('remove-server', function (cb) {
-	del(['build/server.js', 'build/config.json'], cb);
+	del(['build/server.js', 'build/config.json', 'build/package.json'], cb);
 });
 
 gulp.task('copy-server', function () {
-	return gulp.src(['src/server.js', 'config.json'])
+	return gulp.src(['src/server.js', 'src/config.json', 'src/package.json'])
 		.pipe(gulp.dest('build'));
 });
 
@@ -57,7 +57,7 @@ gulp.task('handlebars', function () {
 
 gulp.task('watch', ['browserify'], function () {
 	gulp.watch(
-		['src/**/*.js', 'src/**/*.json', 'src/components/**/*.hbs', 'config.json'],
+		['src/**/*.js', 'src/**/*.json', 'src/components/**/*.hbs', 'src/config.json'],
 		['browserify']
 	);
 });
@@ -70,4 +70,36 @@ gulp.task('uglify', ['remove-server'], function () {
 
 gulp.task('release', ['browserify'], function () {
 	gulp.start('remove-tmp');
+});
+
+var ELECTRON_TAG = 'v0.25.1',
+	ELECTRON_BUILD = 'electron-' + ELECTRON_TAG + '-darwin-x64.zip';
+
+gulp.task('electron:clear', function (cb) {
+	del(['build/electron'], cb);
+});
+
+gulp.task('electron:unzip', ['electron:clear'], function (cb) {
+	var extract = require('extract-zip'),
+		replace = require('gulp-replace'),
+		packageConfig = require('./src/package.json');
+	extract('node_modules/electron-prebuilt/' + ELECTRON_BUILD, {dir: 'build/electron'},
+		function (error) {
+			if (error) {
+				cb(error);
+				return;
+			}
+
+			gulp.src('build/electron/Electron.app/Contents/**/Info.plist')
+				.pipe(replace('<string>Electron</string>', '<string>' + packageConfig.productName + '</string>'))
+				.pipe(replace('<string>Electron Helper', '<string>' + packageConfig.productName + ' Helper'))
+				//.pipe(replace('<string>com.github.electron', '<string>com.github.' + packageConfig.name))
+				.pipe(gulp.dest('build/electron/Electron.app/Contents/'))
+				.on('end', cb);
+		});
+});
+
+gulp.task('electron:build', ['electron:unzip'], function () {
+	return gulp.src('build/*.*')
+		.pipe(gulp.dest('build/electron/Electron.app/Contents/Resources/app'));
 });
