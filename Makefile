@@ -13,13 +13,13 @@ test:
 		--bail
 
 release:
-	./node_modules/.bin/gulp csstime-mode-release && ./node_modules/.bin/gulp release
+	./node_modules/.bin/gulp csstime-mode-release
 
 release-mac-osx:
-	make release && ./node_modules/.bin/gulp electron:build && make brand
+	make release && ./node_modules/.bin/gulp release && ./node_modules/.bin/gulp electron:build && make brand
 
 release-web:
-	make release && ./node_modules/.bin/gulp uglify
+	make release && ./node_modules/.bin/gulp release-web
 
 brand:
 	mv "./build/electron/Electron.app/Contents/Frameworks/Electron Helper EH.app/Contents/MacOS/Electron Helper EH" "./build/electron/Electron.app/Contents/Frameworks/Electron Helper EH.app/Contents/MacOS/$(PRODUCT_NAME) Helper EH" && \
