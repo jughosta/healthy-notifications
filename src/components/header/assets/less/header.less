@@ -1,0 +1,23 @@
+@header-height: 50px;
+@header-padding: 10px;
+@header-icon-size: 40px;
+
+.header {
+	height: @header-height - 2 * @header-padding;
+	padding-bottom: @header-padding;
+	color: #fff;
+	font: 24px 'Trebuchet MS';
+	text-align: center;
+
+	&:before {
+		display: inline-block;
+		vertical-align: bottom;
+		width: @header-icon-size;
+		height: @header-icon-size;
+		margin-right: 10px;
+		margin-bottom: -3px;
+		content: '';
+		background: data-uri('image/svg+xml;charset=UTF-8', 'build/@{CDN}header/svg/icon.svg') no-repeat;
+		background-size: @header-icon-size @header-icon-size;
+	}
+}

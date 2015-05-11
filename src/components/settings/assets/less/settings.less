@@ -1,11 +1,11 @@
 @settings-width: (@theme-item-width + @theme-item-margin * 2) * 3;
-@settings-height: @theme-item-height + @theme-item-margin * 2;
+@settings-height: @theme-item-height + @theme-item-margin * 2 + @header-height;
 
 .settings {
 	position: absolute;
 	top: 50%;
-	left: 50%;
-	width: @settings-width;
-	height: @settings-height;
-	margin: -@settings-height/2 0 0 -@settings-width/2;
+	left: 0;
+	width: 100%;
+	margin-top: -@settings-height/2;
+	text-align: center;
 }

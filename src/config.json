@@ -1,8 +1,8 @@
 {
 	"title": "Healthy Notifications",
 	"size": {
-		"width": 900,
-		"height": 560
+		"width": 920,
+		"height": 640
 	},
 	"icon": "icon.png",
 	"index": "index.html"

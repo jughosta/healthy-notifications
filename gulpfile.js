@@ -124,3 +124,13 @@ gulp.task('electron:build', ['electron:unzip'], function () {
 	return gulp.src('build/*.*')
 		.pipe(gulp.dest('build/electron/Electron.app/Contents/Resources/app'));
 });
+
+gulp.task('electron:zip', function () {
+	var appConfig = require('./src/package.json'),
+		packageConfig = require('./package.json'),
+		zip = require('gulp-zip');
+	return gulp.src('build/electron/' + appConfig.productName + '.app')
+		.pipe(zip(appConfig.productName +
+			'-v' + packageConfig.version + '-' + ELECTRON_TAG + '.app.zip'))
+		.pipe(gulp.dest('build'));
+});

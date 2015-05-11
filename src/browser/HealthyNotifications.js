@@ -2,6 +2,7 @@
 
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
+	headerTemplate = require('./templates/header/template'),
 	Snap = require('snapsvg'),
 	config = require('../../../src/config'),
 	Notifier = require('./HTML5Notifier'),
@@ -49,7 +50,10 @@ HealthyNotifications.prototype.load = function () {
 		}));
 	});
 	window.document.body.innerHTML = settingsTemplate({
-		reminders: remindersList
+		reminders: remindersList,
+		header: headerTemplate({
+			title: config.title
+		})
 	});
 
 	this.addListeners();
