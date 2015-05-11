@@ -3,6 +3,7 @@
 var settingsTemplate = require('./templates/settings/template'),
 	reminderTemplate = require('./templates/reminder/template'),
 	headerTemplate = require('./templates/header/template'),
+	footerTemplate = require('./templates/footer/template'),
 	Snap = require('snapsvg'),
 	config = require('../../../src/config'),
 	Notifier = require('./HTML5Notifier'),
@@ -38,7 +39,8 @@ HealthyNotifications.prototype._timers = null;
  */
 HealthyNotifications.prototype.load = function () {
 	var remindersList = [],
-		reminders = localStore.getData();
+		reminders = localStore.getData(),
+		settingsMarkup = '';
 	Object.keys(reminders).forEach(function (reminderAlias) {
 		reminders[reminderAlias].interval =
 			Number(reminders[reminderAlias].interval);
@@ -49,12 +51,14 @@ HealthyNotifications.prototype.load = function () {
 				.getIntervalShortString(reminders[reminderAlias].interval)
 		}));
 	});
-	window.document.body.innerHTML = settingsTemplate({
+	settingsMarkup = settingsTemplate({
 		reminders: remindersList,
 		header: headerTemplate({
 			title: config.title
 		})
 	});
+	window.document.body.innerHTML = settingsMarkup +
+		(config.isWeb ? footerTemplate({}) : '');
 
 	this.addListeners();
 	this.startTimers();
