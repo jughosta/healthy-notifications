@@ -27,7 +27,12 @@ gulp.task('remove-tmp', function (cb) {
 });
 
 gulp.task('remove-server', function (cb) {
-	del(['build/server.js', 'build/config.json', 'build/package.json'], cb);
+	del([
+		'build/server.js',
+		'build/config.json',
+		'build/package.json',
+		'build/electron'
+	], cb);
 });
 
 gulp.task('copy-server', function () {
@@ -65,7 +70,7 @@ gulp.task('watch', ['browserify'], function () {
 	);
 });
 
-gulp.task('uglify', ['remove-server'], function () {
+gulp.task('uglify', ['browserify'], function () {
 	return gulp.src('build/bundle.js')
 		.pipe(uglify())
 		.pipe(gulp.dest('build'));
@@ -75,8 +80,12 @@ gulp.task('release', ['browserify'], function () {
 	gulp.start('remove-tmp');
 });
 
-var ELECTRON_TAG = 'v0.25.1',
-	ELECTRON_BUILD = 'electron-' + ELECTRON_TAG + '-darwin-x64.zip';
+gulp.task('release-web', ['release', 'uglify'], function () {
+	gulp.start('remove-server');
+});
+
+var ELECTRON_TAG = '0.25.1',
+	ELECTRON_BUILD = 'electron-v' + ELECTRON_TAG + '-darwin-x64.zip';
 
 gulp.task('electron:clear', function (cb) {
 	del(['build/electron'], cb);
@@ -85,7 +94,8 @@ gulp.task('electron:clear', function (cb) {
 gulp.task('electron:unzip', ['electron:clear'], function (cb) {
 	var extract = require('extract-zip'),
 		replace = require('gulp-replace'),
-		packageConfig = require('./src/package.json');
+		appConfig = require('./src/package.json'),
+		packageConfig = require('./package.json');
 	extract(
 		'node_modules/electron-prebuilt/' + ELECTRON_BUILD,
 		{dir: 'build/electron'},
@@ -96,12 +106,15 @@ gulp.task('electron:unzip', ['electron:clear'], function (cb) {
 			}
 
 			gulp.src('build/electron/Electron.app/Contents/**/Info.plist')
+				.pipe(replace('<string>' + ELECTRON_TAG + '</string>',
+					'<string>' + packageConfig.version + '/' +
+					ELECTRON_TAG + '</string>'))
 				.pipe(replace('<string>Electron</string>', '<string>' +
-					packageConfig.productName + '</string>'))
+					appConfig.productName + '</string>'))
 				.pipe(replace('<string>Electron Helper', '<string>' +
-					packageConfig.productName + ' Helper'))
-				//.pipe(replace('<string>com.github.electron',
-				// '<string>com.github.' + packageConfig.name))
+					appConfig.productName + ' Helper'))
+				.pipe(replace('<string>com.github.electron',
+				 	'<string>com.github.' + appConfig.name.replace('-', '')))
 				.pipe(gulp.dest('build/electron/Electron.app/Contents/'))
 				.on('end', cb);
 		});
