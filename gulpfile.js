@@ -114,7 +114,7 @@ gulp.task('electron:unzip', ['electron:clear'], function (cb) {
 				.pipe(replace('<string>Electron Helper', '<string>' +
 					appConfig.productName + ' Helper'))
 				.pipe(replace('<string>com.github.electron',
-				 	'<string>com.github.' + appConfig.name.replace('-', '')))
+					'<string>com.github.' + appConfig.name.replace('-', '')))
 				.pipe(gulp.dest('build/electron/Electron.app/Contents/'))
 				.on('end', cb);
 		});
